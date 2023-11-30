@@ -7,7 +7,7 @@ def test_prefix_evaluate():
 
 
 def test_to_prefix():
-    assert to_prefix("1 + ( 2 - 3 ) * 2") == ["*", "+", "2", "-", "3", "2", "1"]
+    assert to_prefix("1 + ( 2 - 3 ) * 2") == ["+", "1", "*", "-", "2", "3", "2"]
 
 
 def test_calculate():
