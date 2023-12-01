@@ -2,7 +2,8 @@ from operator import add, mul, sub
 from operator import truediv as div
 from typing import List
 
-operators = {'+': add, '-': sub, '*': mul, '/': div}
+operators = {"+": add, "-": sub, "*": mul, "/": div}
+
 
 def prefix_evaluate(prefix_evaluation: List[str]) -> int:
     digits = []
@@ -24,16 +25,16 @@ def to_prefix(equation: str) -> List[str]:
     for el in equation.split()[::-1]:
         if el.isdigit():
             prefix.append(el)
-        elif el == ')' or el in operators:
+        elif el == ")" or el in operators:
             op_stack.append(el)
-        elif el == '(':
-            while op_stack and op_stack[-1] != ')':
+        elif el == "(":
+            while op_stack and op_stack[-1] != ")":
                 prefix.append(op_stack.pop())
             op_stack.pop()
 
-            if ')' not in op_stack:
+            if ")" not in op_stack:
                 while op_stack:
-                    if op_stack[-1] == ')':
+                    if op_stack[-1] == ")":
                         op_stack.pop()
                     else:
                         prefix.append(op_stack.pop())
@@ -42,6 +43,7 @@ def to_prefix(equation: str) -> List[str]:
         prefix.append(op_stack.pop())
 
     return prefix[::-1]
+
 
 def calculate(equation: str) -> int:
     return prefix_evaluate(to_prefix(equation))
