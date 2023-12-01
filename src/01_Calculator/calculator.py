@@ -8,7 +8,7 @@ operators = {'+': add, '-': sub, '*': mul, '/': div}
 def prefix_evaluate(prefix_evaluation: List[str]) -> int:
     digits = []
 
-    for el in prefix_evaluation.split()[::-1]:
+    for el in prefix_evaluation[::-1]:
         if el in operators:
             a, b = digits.pop(), digits.pop()
             digits.append(operators[el](a, b))
@@ -19,28 +19,28 @@ def prefix_evaluate(prefix_evaluation: List[str]) -> int:
 
 
 def to_prefix(equation: str) -> List[str]:
-    opstack = []
+    op_stack = []
     prefix = []
 
     for el in equation.split()[::-1]:
         if el.isdigit():
             prefix.append(el)
         elif el == ')' or el in operators:
-            opstack.append(el)
+            op_stack.append(el)
         elif el == '(':
-            while opstack and opstack[-1] != ')':
-                prefix.append(opstack.pop())
-            opstack.pop()
+            while op_stack and op_stack[-1] != ')':
+                prefix.append(op_stack.pop())
+            op_stack.pop()
 
-            if ')' not in opstack:
-                while opstack:
-                    if opstack[-1] == ')':
-                        opstack.pop()
+            if ')' not in op_stack:
+                while op_stack:
+                    if op_stack[-1] == ')':
+                        op_stack.pop()
                     else:
-                        prefix.append(opstack.pop())
+                        prefix.append(op_stack.pop())
 
-    while opstack:
-        prefix.append(opstack.pop())
+    while op_stack:
+        prefix.append(op_stack.pop())
 
     return prefix[::-1]
 
