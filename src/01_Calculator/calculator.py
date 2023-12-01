@@ -4,7 +4,6 @@ from typing import List
 
 operators = {'+': add, '-': sub, '*': mul, '/': div}
 
-
 def prefix_evaluate(prefix_evaluation: List[str]) -> int:
     digits = []
 
@@ -43,7 +42,6 @@ def to_prefix(equation: str) -> List[str]:
         prefix.append(op_stack.pop())
 
     return prefix[::-1]
-
 
 def calculate(equation: str) -> int:
     return prefix_evaluate(to_prefix(equation))
