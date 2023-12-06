@@ -3,16 +3,13 @@
 
 import unittest
 import datetime
+import string
+
+from group import Person, Student, Group
 from datetime import date
 from copy import deepcopy
 from collections.abc import Iterable
 from itertools import permutations
-import string
-
-try:
-    from sol_group import Person, Student, Group
-except (ModuleNotFoundError, ImportError):
-    from group import Person, Student, Group
 
 
 class TestPerson(unittest.TestCase):
@@ -30,7 +27,7 @@ class TestPerson(unittest.TestCase):
         self.assertTrue(hasattr(p, "name"))
         self.assertTrue(hasattr(p, "surname"))
         self.assertTrue(hasattr(p, "sex"))
-        self.assertTrue(hasattr(p, "bday"))
+        self.assertTrue(hasattr(p, "b_day"))
 
         with self.assertRaises(ValueError):
             Person("a", "b", "c", "1990/4/12")
@@ -45,11 +42,11 @@ class TestPerson(unittest.TestCase):
         p = self._get_polina()
 
         self.assertTrue(hasattr(p, "full_ages"))
-        self.assertEqual(p.full_ages(), datetime.datetime.now().year - p.bday.year)
+        self.assertEqual(p.full_ages(), datetime.datetime.now().year - p.b_day.year)
 
         for i in range(10):
-            p.bday = date(1990 + i, 4, 12)
-            self.assertEqual(p.full_ages(), datetime.datetime.now().year - p.bday.year)
+            p.b_day = date(1990 + i, 4, 12)
+            self.assertEqual(p.full_ages(), datetime.datetime.now().year - p.b_day.year)
 
     def test_eq(self):
 
@@ -77,22 +74,22 @@ class TestPerson(unittest.TestCase):
     def test_str(self):
 
         p = self._get_polina()
-        y = datetime.datetime.now().year - p.bday.year
+        y = datetime.datetime.now().year - p.b_day.year
         self.assertEqual(
             str(p), f"Polina Gagarina, female, {y} years"
         )
-        p = Person('Ivan', 'Ivanov', 'male', date(1989, 4, 26))
-        y = datetime.datetime.now().year - p.bday.year
+        p = Person("Ivan", "Ivanov", "male", date(1989, 4, 26))
+        y = datetime.datetime.now().year - p.b_day.year
         self.assertEqual(
             str(p),
             f"Ivan Ivanov, male, {y} years"
         )
         self.assertEqual(
-            Person('A', 'B', 'male', date(1989, 4, 26)).__str__(),
+            Person("A", "B", "male", date(1989, 4, 26)).__str__(),
             f"A B, male, {y} years"
         )
         self.assertEqual(
-            str(Person('Cap', 'Ter', 'male', date(1989, 4, 26))),
+            str(Person("Cap", "Ter", "male", date(1989, 4, 26))),
             f"Cap Ter, male, {y} years"
         )
         for c in string.printable:
@@ -117,7 +114,7 @@ class TestStudent(unittest.TestCase):
     def test_inheritance(self):
 
         self.assertTrue(issubclass(Student, Person))
-        self.assertTrue('full_ages()' not in Student.__dict__)
+        self.assertTrue("full_ages()" not in Student.__dict__)
 
     def test_init(self):
         p = self._get_galina()
@@ -135,22 +132,22 @@ class TestStudent(unittest.TestCase):
 
     def test_str(self):
         s = self._get_galina()
-        y = datetime.datetime.now().year - s.bday.year
+        y = datetime.datetime.now().year - s.b_day.year
         self.assertEqual(
             str(s), f"Galina Moskovskaya, female, {y} years, 161 group, 5 skill"
         )
-        s = Student('Ivan', 'Ivanov', 'male', date(1989, 4, 26), 1, 1)
-        y = datetime.datetime.now().year - s.bday.year
+        s = Student("Ivan", "Ivanov", "male", date(1989, 4, 26), 1, 1)
+        y = datetime.datetime.now().year - s.b_day.year
         self.assertEqual(
             str(s),
             f"Ivan Ivanov, male, {y} years, 1 group, 1 skill"
         )
         self.assertEqual(
-            Student('A', 'B', 'male', date(1989, 4, 26), 1, 2).__str__(),
+            Student("A", "B", "male", date(1989, 4, 26), 1, 2).__str__(),
             f"A B, male, {y} years, 1 group, 2 skill"
         )
         self.assertEqual(
-            str(Student('Cap', 'Ter', 'male', date(1989, 4, 26), 11, 3)),
+            str(Student("Cap", "Ter", "male", date(1989, 4, 26), 11, 3)),
             f"Cap Ter, male, {y} years, 11 group, 3 skill"
         )
         for i, c in enumerate(string.printable):
@@ -305,16 +302,9 @@ class TestGroup(unittest.TestCase):
         a.sort_by_skill()
         self.assertEqual(g, a)
         a.sort_by_age(reverse=True)
-        print('Sort a by age (reverse=True)')
-        for i, j in zip(a.students, g.students):
-            print(str(i), str(j))
-        print()
-        self.assertEqual(g, a)
-        print('Sort a by age and skill (reverse=True)')
+        self.assertNotEqual(g, a)
         a.sort_by_age_and_skill(reverse=True)
-        for i, j in zip(a.students, g.students):
-            print(str(i), str(j))
-        self.assertEqual(g, a)
+        self.assertNotEqual(g, a)
 
 
 if __name__ == "__main__":
