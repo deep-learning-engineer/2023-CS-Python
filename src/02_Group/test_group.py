@@ -1,8 +1,8 @@
+import pytest
+
 from collections.abc import Iterable
 from datetime import date, datetime, timezone
 from itertools import permutations
-
-import pytest
 from group import Group, Person, Student
 
 

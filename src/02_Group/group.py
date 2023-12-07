@@ -111,6 +111,6 @@ class Group:
         self.sort_by_age(reverse=reverse)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # Start
     import doctest
     doctest.testmod()
