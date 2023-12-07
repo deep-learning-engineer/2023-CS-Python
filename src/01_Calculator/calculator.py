@@ -1,74 +1,55 @@
 from operator import add, mul, sub, truediv
-from typing import List, Optional, Union
+from typing import List
 
 ops = {"+": add, "-": sub, "*": mul, "/": truediv}
 
-operators = {"+": add, "-": sub, "*": mul, "/": truediv}
 
+def prefix_evaluate(prefix_evaluation: List[str]):
+    if not prefix_evaluation:
+        return None
 
-def prefix_evaluate(prefix_evaluation: List[str]) -> int:
-    digits = []
+    stack = []
+    prefix_evaluation = prefix_evaluation.split() if isinstance(prefix_evaluation, str) else prefix_evaluation
 
-    for el in prefix_evaluation[::-1]:
-        if el in operators:
-            a, b = digits.pop(), digits.pop()
-            digits.append(operators[el](a, b))
+    for token in reversed(prefix_evaluation):
+        if token.isdigit():
+            stack.append(int(token))
         else:
-            digits.append(int(el))
+            if token in ops:
+                operand1 = stack.pop()
+                operand2 = stack.pop()
 
-    return digits[0]
+                result = ops[token](operand1, operand2)
+                stack.append(result)
+
+    return stack[0]
 
 
 def to_prefix(equation: str) -> List[str]:
-    pass
+    precedence = {"+": 1, "-": 1, "*": 2, "/": 2}
+    operators = set("+*-/")
+    output = []
+    stack = []
 
-def _split_if_string(string_or_list: Union[List[str], str]) -> List[str]:
-    return string_or_list.split() if isinstance(string_or_list, str) else string_or_list
+    for token in reversed(equation.split()):
+        if token.isdigit():
+            output.append(token)
+        elif token in operators:
+            while stack and stack[-1] != ")" and precedence[token] <= precedence.get(stack[-1], 0):
+                output.append(stack.pop())
+            stack.append(token)
+        elif token == ")":
+            stack.append(token)
+        elif token == "(":
+            while stack and stack[-1] != ")":
+                output.append(stack.pop())
+            stack.pop()
 
+    while stack:
+        output.append(stack.pop())
 
-def prefix_evaluate(prefix_equation: Union[List[str], str]) -> Optional[int]:
-    if not prefix_equation:
-        return None
-    prefix_equation = _split_if_string(prefix_equation)
-    value_stack = []
-    while prefix_equation:
-        el = prefix_equation.pop()
-        if el not in ops:
-            value_stack.append(int(el))
-        else:
-            r_val = value_stack.pop()
-            l_val = value_stack.pop()
-            operation = ops[el]
-            value_stack.append(operation(r_val, l_val))
+    return list(reversed(output))
 
-    return value_stack[0]
-
-def to_prefix(equation: str) -> str:
-    op_stack = []
-    prefix = []
-
-    for el in equation.split()[::-1]:
-        if el.isdigit():
-            prefix.append(el)
-        elif el == ")" or el in operators:
-            op_stack.append(el)
-        elif el == "(":
-            while op_stack and op_stack[-1] != ")":
-                prefix.append(op_stack.pop())
-            op_stack.pop()
-
-            if ")" not in op_stack:
-                while op_stack:
-                    if op_stack[-1] == ")":
-                        op_stack.pop()
-                    else:
-                        prefix.append(op_stack.pop())
-        pass
-
-    while op_stack:
-        prefix.append(op_stack.pop())
-
-    return prefix[::-1]
 
 def calculate(equation: str) -> int:
     return prefix_evaluate(to_prefix(equation))

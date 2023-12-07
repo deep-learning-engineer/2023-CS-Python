@@ -19,6 +19,7 @@ test_prefix_evaluate()
 test_to_prefix()
 test_calculate()
 
+
 @pytest.mark.parametrize(
     ("equation", "result"),
     [
@@ -43,7 +44,7 @@ def test_prefix_evaluate(equation: str, result: int):
     ],
 )
 def test_to_prefix(infix_equation: str, prefix_equation: str):
-    assert to_prefix(infix_equation) == prefix_equation
+    assert to_prefix(infix_equation) == prefix_equation.split()
 
 
 @pytest.mark.parametrize("equation", ["1 + 2", "1 * 2", "1 + ( 2 - 3 ) * 2"])
