@@ -9,7 +9,9 @@ def prefix_evaluate(prefix_evaluation: List[str]):
         return None
 
     stack = []
-    prefix_evaluation = prefix_evaluation.split() if isinstance(prefix_evaluation, str) else prefix_evaluation
+    prefix_evaluation = prefix_evaluation.split() \
+        if isinstance(prefix_evaluation, str) \
+        else prefix_evaluation
 
     for token in reversed(prefix_evaluation):
         if token.isdigit():
