@@ -37,20 +37,12 @@ path = "src/main/__about__.py"
 
 [tool.hatch.envs.default]
 dependencies = [
-  "coverage[toml]>=6.5",
   "pytest",
 ]
 [tool.hatch.envs.default.scripts]
-test = "pytest {args:src}"
-test-cov = "coverage run -m pytest {args:src}"
-cov-report = [
-  "- coverage combine",
-  "coverage report",
-]
-cov = [
-  "test-cov",
-  "cov-report",
-]
+test = "pytest -vv {args:src}"
+test1 = "pytest -vv {args:src/01_Calculator}"
+test2 = "pytest -vv --doctest-modules {args:src/02_Group}"
 
 [[tool.hatch.envs.all.matrix]]
 python = ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
@@ -68,6 +60,7 @@ style = [
   "ruff {args:.}",
 ]
 fmt = [
+  "ruff format {args:.}",
   "ruff --fix {args:.}",
   "style",
 ]
@@ -78,7 +71,7 @@ all = [
 
 [tool.ruff]
 target-version = "py37"
-line-length = 120
+line-length = 100
 select = [
   "A",
   "ARG",
@@ -107,6 +100,7 @@ select = [
   "YTT",
 ]
 ignore = [
+  "ISC001",
   # Allow non-abstract empty methods in abstract base classes
   "B027",
   # Allow boolean positional values in function calls, like `dict.get(... True)`

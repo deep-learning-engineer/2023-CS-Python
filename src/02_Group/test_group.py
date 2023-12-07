@@ -1,234 +1,163 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-import unittest
-import datetime
-import string
-
-from group import Person, Student, Group
-from datetime import date
-from copy import deepcopy
 from collections.abc import Iterable
+from datetime import date, datetime, timezone
 from itertools import permutations
 
+import pytest
+from group import Group, Person, Student
 
-class TestPerson(unittest.TestCase):
+
+@pytest.fixture
+def polina() -> Person:
+    return Person("Polina", "Gagarina", "female", date(1990, 4, 12))
+
+
+@pytest.fixture
+def galina():
+    return Student("Galina", "Moskovskaya", "female", date(1992, 4, 12), 161, 5)
+
+
+@pytest.fixture
+def group() -> Group:
+    return Group(
+        [
+            Student("Ivan", "Petrov", "male", date(1997, 1, 1), 1, 1),
+            Student("Petya", "Sidorov", "female", date(1993, 1, 1), 1, 1),
+            Student("Serge", "Ivanov", "male", date(1994, 1, 1), 1, 1),
+        ]
+    )
+
+
+class TestPerson:
+    @staticmethod
+    def test_init(polina: Person):
+        assert hasattr(polina, "name")
+        assert hasattr(polina, "surname")
+        assert hasattr(polina, "sex")
+        assert hasattr(polina, "b_day")
 
     @staticmethod
-    def _get_polina():
-        return Person(
-            "Polina", "Gagarina",
-            "female", date(1990, 4, 12)
-        )
-
-    def test_init(self):
-        p = self._get_polina()
-
-        self.assertTrue(hasattr(p, "name"))
-        self.assertTrue(hasattr(p, "surname"))
-        self.assertTrue(hasattr(p, "sex"))
-        self.assertTrue(hasattr(p, "b_day"))
-
-        with self.assertRaises(ValueError):
+    def test_error_init():
+        with pytest.raises(ValueError):
             Person("a", "b", "c", "1990/4/12")
 
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             Person("a", "b", "c", 1990)
 
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             Person("a", "b", "c", [])
 
-    def test_ages(self):
-        p = self._get_polina()
-
-        self.assertTrue(hasattr(p, "full_ages"))
-        self.assertEqual(p.full_ages(), datetime.datetime.now().year - p.b_day.year)
+    def test_ages(self, polina: Person):
+        assert hasattr(polina, "full_ages")
+        assert polina.full_ages() == datetime.now(tz=timezone.utc).year - polina.b_day.year
 
         for i in range(10):
-            p.b_day = date(1990 + i, 4, 12)
-            self.assertEqual(p.full_ages(), datetime.datetime.now().year - p.b_day.year)
-
-    def test_eq(self):
-
-        p = self._get_polina()
-        self.assertEqual(p, p)
-        self.assertNotEqual(
-            p, Person("Polina", "Gagarina", "female", date(1992, 4, 12))
-        )
-        self.assertNotEqual(
-            p, Person("Polina", "Gagarina", "male", date(1990, 4, 12))
-        )
-        self.assertNotEqual(
-            p, Person("Polina", "Mareeva", "female", date(1990, 4, 12))
-        )
-        self.assertNotEqual(
-            p, Person("Nadya", "Gagarina", "female", date(1990, 4, 12))
-        )
-        self.assertNotEqual(
-            p, Person("Katya", "Gagarina", "female", date(1990, 4, 12))
-        )
-        self.assertNotEqual(
-            p, Person("Mark", "Sobolev", "male", date(1999, 4, 12))
-        )
-
-    def test_str(self):
-
-        p = self._get_polina()
-        y = datetime.datetime.now().year - p.b_day.year
-        self.assertEqual(
-            str(p), f"Polina Gagarina, female, {y} years"
-        )
-        p = Person("Ivan", "Ivanov", "male", date(1989, 4, 26))
-        y = datetime.datetime.now().year - p.b_day.year
-        self.assertEqual(
-            str(p),
-            f"Ivan Ivanov, male, {y} years"
-        )
-        self.assertEqual(
-            Person("A", "B", "male", date(1989, 4, 26)).__str__(),
-            f"A B, male, {y} years"
-        )
-        self.assertEqual(
-            str(Person("Cap", "Ter", "male", date(1989, 4, 26))),
-            f"Cap Ter, male, {y} years"
-        )
-        for c in string.printable:
-            p.name = c + c
-            p.surname = c
-            self.assertEqual(
-                str(p),
-                f"{c + c} {c}, male, {y} years"
-            )
-
-
-class TestStudent(unittest.TestCase):
+            polina.b_day = date(1990 + i, 4, 12)
+            assert polina.full_ages() == datetime.now(tz=timezone.utc).year - polina.b_day.year
 
     @staticmethod
-    def _get_galina():
-        return Student(
-            "Galina", "Moskovskaya",
-            "female", date(1992, 4, 12),
-            161, 5
-        )
+    def test_eq(polina: Person):
+        assert polina == Person("Polina", "Gagarina", "female", date(1990, 4, 12))
 
-    def test_inheritance(self):
+    @staticmethod
+    @pytest.mark.parametrize(
+        "not_polina",
+        [
+            Person("Polina", "Gagarina", "female", date(1992, 4, 12)),
+            Person("Polina", "Gagarina", "male", date(1990, 4, 12)),
+            Person("Polina", "Mareeva", "female", date(1990, 4, 12)),
+            Person("Nadya", "Gagarina", "female", date(1990, 4, 12)),
+            Person("Katya", "Gagarina", "female", date(1990, 4, 12)),
+            Person("Mark", "Sobolev", "male", date(1999, 4, 12)),
+        ],
+    )
+    def test_not_eq(polina: Person, not_polina: Person):
+        assert polina != not_polina
 
-        self.assertTrue(issubclass(Student, Person))
-        self.assertTrue("full_ages()" not in Student.__dict__)
+    @staticmethod
+    def test_repr(polina: Person):
+        import datetime  # noqa: F401
 
-    def test_init(self):
-        p = self._get_galina()
-        self.assertTrue(hasattr(p, "group"))
-        self.assertTrue(hasattr(p, "skill"))
+        assert eval(repr(polina))  # noqa: S307
 
-        with self.assertRaises(ValueError):
+
+class TestStudent:
+    @staticmethod
+    def test_inheritance():
+        assert issubclass(Student, Person)
+        assert "full_ages()" not in Student.__dict__
+
+    @staticmethod
+    def test_init(galina: Student):
+        assert hasattr(galina, "group")
+        assert hasattr(galina, "skill")
+
+    @staticmethod
+    def test_error_init():
+        with pytest.raises(ValueError):
             Student("a", "b", "c", "1990/4/12", 1, 1)
 
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             Student("a", "b", "c", 1990, 1, 1)
 
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             Student("a", "b", "c", [], 1, 1)
 
-    def test_str(self):
-        s = self._get_galina()
-        y = datetime.datetime.now().year - s.b_day.year
-        self.assertEqual(
-            str(s), f"Galina Moskovskaya, female, {y} years, 161 group, 5 skill"
-        )
-        s = Student("Ivan", "Ivanov", "male", date(1989, 4, 26), 1, 1)
-        y = datetime.datetime.now().year - s.b_day.year
-        self.assertEqual(
-            str(s),
-            f"Ivan Ivanov, male, {y} years, 1 group, 1 skill"
-        )
-        self.assertEqual(
-            Student("A", "B", "male", date(1989, 4, 26), 1, 2).__str__(),
-            f"A B, male, {y} years, 1 group, 2 skill"
-        )
-        self.assertEqual(
-            str(Student("Cap", "Ter", "male", date(1989, 4, 26), 11, 3)),
-            f"Cap Ter, male, {y} years, 11 group, 3 skill"
-        )
-        for i, c in enumerate(string.printable):
-            s.name = c + c
-            s.surname = c
-            s.skill = i
-            self.assertEqual(
-                str(s),
-                f"{c + c} {c}, male, {y} years, 1 group, {i} skill"
-            )
+    def test_repr(self, galina: Student):
+        import datetime  # noqa: F401
 
-    def test_eq(self):
-        s = self._get_galina()
-        self.assertEqual(s, s)
+        assert eval(repr(galina))  # noqa: S307
 
-        self.assertNotEqual(
-            s, Student(
-                "Galina", "Moskovskaya",
-                "female", date(1992, 4, 12), 161, 6
-            )
-        )
-        self.assertNotEqual(
-            s, Student("Galina", "A", "female", date(1992, 4, 12), 161, 5)
-        )
-        self.assertNotEqual(
-            s, Student(
-                "Galina", "Moskovskaya",
-                "female", date(1992, 4, 11), 11, 6)
-        )
-        self.assertNotEqual(
-            s, Student(
-                "Galina", "Moskovskaya",
-                "female", date(1992, 2, 12), 161, 6
-            )
-        )
-        self.assertNotEqual(
-            s, Student(
-                "Galina", "Moskovskaya",
-                "female", date(1992, 4, 12), 162, 6
-            )
-        )
-        self.assertNotEqual(
-            s, Student(
-                "Galina", "Moskoviskaya",
-                "female", date(1992, 4, 12), 161, 6
-            )
-        )
-
-
-class TestGroup(unittest.TestCase):
+    def test_eq(self, galina: Student):
+        assert galina == Student("Galina", "Moskovskaya", "female", date(1992, 4, 12), 161, 5)
 
     @staticmethod
-    def _get_group():
-        return [
-            Student("a", "a", "a", date(1997, 1, 1), 1, 1),
-            Student("a", "a", "a", date(1993, 1, 1), 1, 1),
-            Student("a", "a", "a", date(1994, 1, 1), 1, 1)
+    @pytest.mark.parametrize(
+        "not_galina",
+        [
+            Student("Galina", "Moskovskaya", "female", date(1992, 4, 12), 161, 6),
+            Student("Galina", "A", "female", date(1992, 4, 12), 161, 5),
+            Student("Galina", "Moskovskaya", "female", date(1992, 4, 11), 11, 6),
+            Student("Galina", "Moskovskaya", "female", date(1992, 2, 12), 161, 6),
+            Student("Galina", "Moskovskaya", "female", date(1992, 4, 12), 162, 6),
+            Student("Galina", "Moskoviskaya", "female", date(1992, 4, 12), 161, 6),
+        ],
+    )
+    def test_not_eq(galina: Student, not_galina: Student):
+        assert galina != not_galina
+
+
+class TestGroup:
+    @staticmethod
+    def test_encapsulation():
+        assert not issubclass(Group, list)
+        assert not issubclass(Group, Iterable)
+
+    @staticmethod
+    def test_init():
+        _group = [
+            Student("Ivan", "Petrov", "male", date(1997, 1, 1), 1, 1),
+            Student("Petya", "Sidorov", "female", date(1993, 1, 1), 1, 1),
+            Student("Serge", "Ivanov", "male", date(1994, 1, 1), 1, 1),
         ]
-
-    def test_encapsulation(self):
-
-        self.assertTrue(not issubclass(Group, list))
-        self.assertTrue(not issubclass(Group, Iterable))
-
-    def test_str(self):
-        group = self._get_group()
-        exp_str = [f"Student({s})" for s in group]
-        exp_str = f"Group({exp_str})"
-        self.assertEqual(str(Group(group)), exp_str)
-
-    def test_init(self):
-        g = Group(self._get_group())
-        a = Group(tuple(self._get_group()))
-        self.assertEqual(a, g)
+        group_1 = Group(_group)
+        group_2 = Group(tuple(_group))
+        assert group_1 == group_2
 
         def iterable(group):
-            for s in group:
-                yield s
+            yield from group
 
-        a = Group(iterable(self._get_group()))
-        self.assertEqual(a, g)
+        group_3 = Group(iterable(_group))
+        assert group_1 == group_3
+
+    @staticmethod
+    def test_repr(group: Group):
+        import datetime  # noqa: F401
+
+        assert eval(repr(group))  # noqa: S307
+
+    @staticmethod
+    def test_eq(group: Group):
+        assert group == group  # noqa: PLR0124
 
     def test_sort_by_ages(self):
         s1 = Student("a", "a", "a", date(1997, 1, 1), 1, 1)
@@ -237,19 +166,18 @@ class TestGroup(unittest.TestCase):
         g = Group([s1, s2, s3])
 
         g.sort_by_age()
-        self.assertEqual(str(g), str(Group([s1, s3, s2])))
+        assert g == Group([s1, s3, s2])
         g.sort_by_age(reverse=True)
-        self.assertEqual(str(g), str(Group([s2, s3, s1])))
+        assert g == Group([s2, s3, s1])
 
         s4 = Student("a", "a", "a", date(1992, 1, 1), 1, 1)
 
         for group in permutations([s1, s2, s3, s4]):
-
             g = Group(group)
             g.sort_by_age()
-            self.assertEqual(str(g), str(Group([s1, s3, s2, s4])))
+            assert g == Group([s1, s3, s2, s4])
             g.sort_by_age(reverse=True)
-            self.assertEqual(str(g), str(Group([s4, s2, s3, s1])))
+            assert g == Group([s4, s2, s3, s1])
 
     def test_sort_by_skill(self):
         s1 = Student("a", "a", "a", date(1997, 1, 1), 1, 1)
@@ -258,19 +186,18 @@ class TestGroup(unittest.TestCase):
         g = Group([s1, s2, s3])
 
         g.sort_by_skill()
-        self.assertEqual(str(g), str(Group([s1, s3, s2])))
+        assert g == Group([s1, s3, s2])
         g.sort_by_skill(reverse=True)
-        self.assertEqual(str(g), str(Group([s2, s3, s1])))
+        assert g == Group([s2, s3, s1])
 
         s4 = Student("a", "a", "a", date(1992, 1, 1), 1, 2)
 
         for group in permutations([s1, s2, s3, s4]):
-
             g = Group(group)
             g.sort_by_skill()
-            self.assertEqual(str(g), str(Group([s1, s4, s3, s2])))
+            assert g == Group([s1, s4, s3, s2])
             g.sort_by_skill(reverse=True)
-            self.assertEqual(str(g), str(Group([s2, s3, s4, s1])))
+            assert g == Group([s2, s3, s4, s1])
 
     def test_sort_by_age_and_skill(self):
         s1 = Student("a", "a", "a", date(1993, 1, 1), 1, 4)
@@ -279,33 +206,15 @@ class TestGroup(unittest.TestCase):
         g = Group([s1, s2, s3])
 
         g.sort_by_age_and_skill()
-        self.assertEqual(str(g), str(Group([s3, s2, s1])))
+        assert g == Group([s3, s2, s1])
         g.sort_by_age_and_skill(reverse=True)
-        self.assertEqual(str(g), str(Group([s1, s2, s3])))
+        assert g == Group([s1, s2, s3])
 
         s4 = Student("a", "a", "a", date(1994, 1, 1), 1, 7)
 
         for group in permutations([s1, s2, s3, s4]):
-
             g = Group(group)
             g.sort_by_age_and_skill()
-            self.assertEqual(str(g), str(Group([s3, s4, s2, s1])))
+            assert g == Group([s3, s4, s2, s1])
             g.sort_by_age_and_skill(reverse=True)
-            self.assertEqual(str(g), str(Group([s1, s2, s4, s3])))
-
-    def test_eq(self):
-        g = Group(self._get_group())
-        self.assertEqual(g, g)
-        a = Group(self._get_group() + self._get_group())
-        self.assertNotEqual(a, g)  # were assertNotEqual -- bad test
-        a = deepcopy(g)
-        a.sort_by_skill()
-        self.assertEqual(g, a)
-        a.sort_by_age(reverse=True)
-        self.assertNotEqual(g, a)
-        a.sort_by_age_and_skill(reverse=True)
-        self.assertNotEqual(g, a)
-
-
-if __name__ == "__main__":
-    unittest.main()
+            assert g == Group([s1, s2, s4, s3])

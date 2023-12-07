@@ -1,24 +1,27 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-from datetime import date
+from datetime import date, datetime, timezone
+from typing import List
 
 
 class Person:
     """
-    >>> p = Person("Ivan", "Ivanov", "male", date(1989, 4, 26))
-    >>> print(p)
-    Ivan Ivanov, male, 34 years
+    >>> person = Person("Ivan", "Ivanov", "male", date(1999, 8, 12))
+    >>> person
+    Person('Ivan', 'Ivanov', 'male', datetime.date(1999, 8, 12))
 
-    >>> p.full_ages()
-    34
+    >>> Person("Ivan", "Ivanov", "male", datetime.now(tz=timezone.utc).date()).full_ages()
+    0
     >>> Person("Ivan", "Ivanov", "man", "1989.4.26")
     Traceback (most recent call last):
         ...
-    ValueError: bday must be date type
+    ValueError: b_day must be date type
     """
 
-    def __init__(self, name, surname, sex, b_day):
+    name: str
+    surname: str
+    sex: str
+    b_day: date
+
+    def __init__(self, name: str, surname: str, sex: str, b_day: date):
         self.name = name
         self.surname = surname
         self.sex = sex
@@ -26,11 +29,13 @@ class Person:
         if isinstance(b_day, date):
             self.b_day = b_day
         else:
-            raise ValueError("_day must be date type")
+            raise ValueError("b_day must be date type")
 
-    def __str__(self):
-        return f"{self.name} {self.surname}, " \
-               f"{self.sex}, {self.full_ages()} years"
+    def __repr__(self) -> str:
+        return f"Person({self.name!r}, {self.surname!r}, {self.sex!r}, {self.b_day!r})"
+
+    def __eq__(self, other: "Person") -> bool:
+        return self.__repr__() == other.__repr__()
 
     def full_ages(self):
         return date.today().year - self.b_day.year
@@ -38,53 +43,72 @@ class Person:
 
 class Student(Person):
     """
-    >>> s = Student("Ivan", "Ivanov", "male", date(1989, 4, 26), 161, 9)
-    >>> print(s)
-    Ivan Ivanov, male, 34 years, 161 group, 9 skill
+    >>> student = Student('Ivan', 'Ivanov', 'male', date(1999, 8, 12), 161, 9)
+    >>> student
+    Student('Ivan', 'Ivanov', 'male', datetime.date(1999, 8, 12), 161, 9)
     """
-    def __init__(self, name, surname, sex, b_day, group, skill):
+
+    name: str
+    surname: str
+    sex: str
+    b_day: date
+    group: int
+    skill: int
+
+    def __init__(self, name: str, surname: str, sex: str, b_day: date, group: int, skill: int):
         super().__init__(name, surname, sex, b_day)
 
         self.group = group
         self.skill = skill
 
-    def __str__(self):
-        return f"{self.name} {self.surname}, " \
-               f"{self.sex}, {self.full_ages()} years, " \
-               f"{self.group} group, {self.skill} skill"
+    def __repr__(self) -> str:
+        return f"Student({self.name!r}, {self.surname!r}, {self.sex!r}," \
+               f" {self.b_day!r}, {self.group!r}, {self.skill!r})"
+
+    def __eq__(self, other: "Student") -> bool:
+        return self.__repr__() == other.__repr__()
 
 
 class Group:
     """
     Encapsulates list of students
     """
-    def __init__(self, students):
-        self.students = list(students)
 
-    def __eq__(self, other):
-        if len(self.students) != len(other.students):
+    group: List[Student]
+
+    def __init__(self, group: List[Student]):
+        self.group = list(group)
+
+    def __eq__(self, other: "Group") -> bool:
+        if len(self.group) != len(other.group):
             return False
 
-        for ind in range(len(self.students)):
-            if str(self.students[ind]) != str(other.students[ind]):
+        for ind in range(len(self.group)):
+            if str(self.group[ind]) != str(other.group[ind]):
                 return False
         else:
             return True
 
-    def __str__(self):
-        return f"Group({[f'Student({str(student)})' for student in self.students]})"
+    def __repr__(self) -> str:
+        return f"Group([{', '.join([repr(group) for group in self.group])}])"
 
-    def sort_by_age(self, reverse=False):
-        self.students = sorted(self.students, key=lambda x: x.full_ages(),
-                               reverse=reverse)
+    def sort_by_age(self, *, reverse: bool = False):
+        self.group = sorted(
+            self.group,
+            key=lambda student: student.full_ages(),
+            reverse=reverse,
+        )
 
-    def sort_by_skill(self, reverse=False):
-        self.students = sorted(self.students, key=lambda x: x.skill,
-                               reverse=reverse)
+    def sort_by_skill(self, *, reverse=False):
+        self.group = sorted(
+            self.group,
+            key=lambda student: student.skill,
+            reverse=reverse,
+        )
 
-    def sort_by_age_and_skill(self, reverse=False):
-        self.sort_by_skill(reverse)
-        self.sort_by_age(reverse)
+    def sort_by_age_and_skill(self, *, reverse=False):
+        self.sort_by_skill(reverse=reverse)
+        self.sort_by_age(reverse=reverse)
 
 
 if __name__ == "__main__":
