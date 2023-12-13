@@ -218,3 +218,9 @@ class TestGroup:
             assert g == Group([s3, s4, s2, s1])
             g.sort_by_age_and_skill(reverse=True)
             assert g == Group([s1, s2, s4, s3])
+
+
+# 1 2 3 4       13 (1, 1)
+# 12 13 14 5
+# 11 16 15 6
+# 10 9 8 7
