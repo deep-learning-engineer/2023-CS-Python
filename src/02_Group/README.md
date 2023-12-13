@@ -1,4 +1,4 @@
-# group (4 points)
+# Group
 
 Implement classes (`Person`, `Student`, `Group`) in file `group.py`. API and implementation details
 you can find in docstring and file `test_group.py`. First of all, learn tests in file `test_group.py`, 
