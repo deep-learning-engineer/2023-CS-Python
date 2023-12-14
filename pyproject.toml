@@ -32,6 +32,12 @@ Documentation = "https://gitlab.com/maruschin/2023-cs-python#readme"
 Issues = "https://gitlab.com/maruschin/2023-cs-python/issues"
 Source = "https://gitlab.com/maruschin/2023-cs-python"
 
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+      packages = ["src/main"]
+
 [tool.hatch.version]
 path = "src/main/__about__.py"
 
@@ -69,6 +75,18 @@ fmt = [
 all = [
   "style",
   "typing",
+]
+task1 = [
+  "ruff {args:src/01_Calculator}",
+]
+task2 = [
+  "ruff {args:src/02_Group}",
+]
+task3 = [
+  "ruff {args:src/03_Singleton}",
+]
+task4 = [
+  "ruff {args:src/04_Ocean}",
 ]
 
 [tool.ruff]
