@@ -25,7 +25,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+dependencies = ["numpy"]
 
 [project.urls]
 Documentation = "https://gitlab.com/maruschin/2023-cs-python#readme"
