@@ -5,6 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89b0b4e2-d137-40e8-a43b-0affcba42c94" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01_Calculator/calculator.py" beforeDir="false" afterPath="$PROJECT_DIR$/01_Calculator/calculator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/01_Calculator/test_calculator.py" beforeDir="false" afterPath="$PROJECT_DIR$/01_Calculator/test_calculator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/02_Group/group.py" beforeDir="false" afterPath="$PROJECT_DIR$/02_Group/group.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/02_Group/test_group.py" beforeDir="false" afterPath="$PROJECT_DIR$/02_Group/test_group.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/03_Singleton/singleton.py" beforeDir="false" afterPath="$PROJECT_DIR$/03_Singleton/singleton.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/04_Ocean/ocean.py" beforeDir="false" afterPath="$PROJECT_DIR$/04_Ocean/ocean.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -25,8 +31,9 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/04_Ocean/test_ocean.py" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.test_ocean">
+  <component name="RunManager" selected="Python.test_group">
     <configuration name="group" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="src" />
       <option name="INTERPRETER_OPTIONS" value="" />

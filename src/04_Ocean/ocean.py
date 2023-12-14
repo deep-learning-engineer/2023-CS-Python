@@ -1,5 +1,5 @@
-import numpy as np
 import sys
+import numpy as np
 
 from typing import List
 
@@ -20,7 +20,7 @@ class Ocean:
         num_rows, num_cols = len(self.state), len(self.state[0])
         new_state = [[0 for _ in range(num_cols)] for _ in range(num_rows)]
         old_state = np.pad(np.array(self.state.copy()), 1)
-        water, rock, fish, shrimp = 0, 1, 2, 3
+        water, fish, shr = 0, 2, 3
 
         for row in range(1, num_rows+1):
             for col in range(1, num_cols+1):
@@ -33,16 +33,16 @@ class Ocean:
                         else:
                             continue
 
-                if (old_state[row][col] == fish) and ((animals[fish] >= 4) or (animals[fish] <= 1)):
+                if (old_state[row][col] == fish) and ((animals[fish] >= 4) or (animals[fish] <= 1)):  # noqa: PLR2004
                     new_state[row-1][col-1] = water
 
-                elif (old_state[row][col] == shrimp) and ((animals[shrimp] >= 4) or (animals[shrimp] <= 1)):
+                elif (old_state[row][col] == shr) and ((animals[shr] >= 4) or (animals[shr] <= 1)):  # noqa: PLR2004
                     new_state[row-1][col-1] = water
 
                 elif old_state[row][col] == water:
-                    if animals[fish] == 3:
+                    if animals[fish] == 3:  # noqa: PLR2004
                         new_state[row-1][col-1] = 2
-                    elif animals[shrimp] == 3:
+                    elif animals[shr] == 3:  # noqa: PLR2004
                         new_state[row-1][col-1] = 3
                     else:
                         new_state[row-1][col-1] = old_state[row][col]

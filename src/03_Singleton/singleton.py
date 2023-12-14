@@ -9,4 +9,3 @@ class Singleton:
             cls.single = super().__new__(cls)
 
         return cls.single
-

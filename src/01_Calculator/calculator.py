@@ -16,13 +16,12 @@ def prefix_evaluate(prefix_evaluation: List[str]):
     for token in reversed(prefix_evaluation):
         if token.isdigit():
             stack.append(int(token))
-        else:
-            if token in ops:
-                operand1 = stack.pop()
-                operand2 = stack.pop()
+        elif tokin in ops:
+            operand1 = stack.pop()
+            operand2 = stack.pop()
 
-                result = ops[token](operand1, operand2)
-                stack.append(result)
+            result = ops[token](operand1, operand2)
+            stack.append(result)
 
     return stack[0]
 

@@ -12,7 +12,7 @@ def test_to_prefix():
 
 
 def test_calculate():
-    assert calculate("1 + ( 2 - 3 ) * 2") == eval("1 + ( 2 - 3 ) * 2")
+    assert calculate("1 + ( 2 - 3 ) * 2") == eval("1 + ( 2 - 3 ) * 2")  # noqa: S307
 
 
 test_prefix_evaluate()

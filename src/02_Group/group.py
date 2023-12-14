@@ -29,7 +29,8 @@ class Person:
         if isinstance(b_day, date):
             self.b_day = b_day
         else:
-            raise ValueError("b_day must be date type")
+            error = "b_day must be date type"
+            raise ValueError(error)
 
     def __repr__(self) -> str:
         return f"Person({self.name!r}, {self.surname!r}, {self.sex!r}, {self.b_day!r})"
@@ -38,7 +39,8 @@ class Person:
         return self.__repr__() == other.__repr__()
 
     def full_ages(self):
-        return date.today().year - self.b_day.year
+        today = datetime.now(tz=timezone.utc)
+        return today - self.b_day.year
 
 
 class Student(Person):
@@ -62,8 +64,8 @@ class Student(Person):
         self.skill = skill
 
     def __repr__(self) -> str:
-        return f"Student({self.name!r}, {self.surname!r}, {self.sex!r}," \
-               f" {self.b_day!r}, {self.group!r}, {self.skill!r})"
+        return (f"Student({self.name!r}, {self.surname!r}, {self.sex!r},"
+                f" {self.b_day!r}, {self.group!r}, {self.skill!r})")
 
     def __eq__(self, other: "Student") -> bool:
         return self.__repr__() == other.__repr__()
