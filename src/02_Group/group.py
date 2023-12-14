@@ -40,7 +40,7 @@ class Person:
 
     def full_ages(self):
         today = datetime.now(tz=timezone.utc)
-        return today - self.b_day.year
+        return today.year - self.b_day.year
 
 
 class Student(Person):
@@ -88,8 +88,8 @@ class Group:
         for ind in range(len(self.group)):
             if str(self.group[ind]) != str(other.group[ind]):
                 return False
-        else:
-            return True
+
+        return True
 
     def __repr__(self) -> str:
         return f"Group([{', '.join([repr(group) for group in self.group])}])"

@@ -1,4 +1,4 @@
-import sys
+import sys  # noqa: I001
 import numpy as np
 
 from typing import List

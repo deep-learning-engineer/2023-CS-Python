@@ -1,4 +1,4 @@
-import pytest
+import pytest  # noqa: I001
 
 from itertools import permutations
 from collections.abc import Iterable
