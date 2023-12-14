@@ -1,5 +1,5 @@
-import sys
 import numpy as np
+import sys
 
 from typing import List
 
@@ -20,6 +20,7 @@ class Ocean:
         num_rows, num_cols = len(self.state), len(self.state[0])
         new_state = [[0 for _ in range(num_cols)] for _ in range(num_rows)]
         old_state = np.pad(np.array(self.state.copy()), 1)
+        fish,  = 2
 
         for row in range(1, num_rows+1):
             for col in range(1, num_cols+1):
@@ -64,4 +65,3 @@ if __name__ == "__main__":
     ocean = Ocean(init_state=init_state_)
     for _ in range(n_quantums):
         ocean = ocean.gen_next_quantum()
-    print(ocean)
