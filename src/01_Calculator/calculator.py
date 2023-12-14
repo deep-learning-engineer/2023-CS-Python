@@ -4,7 +4,7 @@ from typing import List
 ops = {"+": add, "-": sub, "*": mul, "/": truediv}
 
 
-def prefix_evaluate(prefix_evaluation: List[str]):
+def prefix_evaluate(prefix_evaluation):
     if not prefix_evaluation:
         return None
 
@@ -30,7 +30,7 @@ def to_prefix(equation: str) -> List[str]:
     precedence = {"+": 1, "-": 1, "*": 2, "/": 2}
     operators = set("+*-/")
     output = []
-    stack = []
+    stack: List[object] = []
 
     for token in reversed(equation.split()):
         if token.isdigit():

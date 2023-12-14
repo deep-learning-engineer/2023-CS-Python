@@ -50,8 +50,7 @@ class Ocean:
                 else:
                     new_state[row-1][col-1] = old_state[row][col]
 
-        self.state = new_state
-        return self.state
+        return Ocean(new_state)
 
 
 if __name__ == "__main__":

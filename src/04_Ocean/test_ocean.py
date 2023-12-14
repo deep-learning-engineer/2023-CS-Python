@@ -25,6 +25,6 @@ class TestOcean:
         assert self.ocean.__repr__() == f"Ocean({self.init_state!r})"
 
     def test_ocean_step(self):
-        self.ocean.gen_next_quantum()
+        self.ocean = self.ocean.gen_next_quantum()
         assert str(self.ocean) == "\n".join(["".join(str(el) for el in row)
                                              for row in self.next_state])
