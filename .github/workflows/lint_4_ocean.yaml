@@ -1,4 +1,4 @@
-name: Test 5. Lint
+name: Lint 4. Ocean
 
 on: [push]
 
@@ -19,6 +19,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install hatch
         hatch env create
-    - name: Analysing the code
+    - name: Lint Task
       run: |
-        hatch run lint:all
+        hatch run lint:task4

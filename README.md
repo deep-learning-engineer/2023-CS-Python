@@ -47,5 +47,5 @@ hatch run test2
     ```
 5. Отправить код в удаленный репозиторий:
     ```bash
-    git commit push
+    git push
     ```
